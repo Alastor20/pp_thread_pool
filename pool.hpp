@@ -43,6 +43,7 @@ public:
 
     return result;
   }
+  void stop(bool cancel_pending = false);
   ~ThreadPool() noexcept;
 private:
   void execute(size_t id);
