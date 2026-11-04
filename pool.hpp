@@ -43,6 +43,10 @@ public:
 
     return result;
   }
+
+  void waitIdle();
+  void pause();
+  void resume();
   void stop(bool cancel_pending = false);
   void growTo(size_t count);
   void shrinkTo(size_t count);

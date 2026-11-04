@@ -18,6 +18,34 @@ ThreadPool::ThreadPool(size_t threads):
     threads_.emplace_back(&ThreadPool::execute, this, i);
   }
 }
+
+void ThreadPool::waitIdle()
+{
+  std::unique_lock< std::mutex > lock(mutex_);
+  idle_condition_.wait(lock,
+      [this]()
+      {
+        return tasks_.empty() && active_tasks_ == 0;
+      });
+}
+
+void ThreadPool::pause()
+{
+  std::lock_guard< std::mutex > lock(mutex_);
+  if (!stopped_) {
+    paused_ = true;
+  }
+}
+
+void ThreadPool::resume()
+{
+  {
+    std::lock_guard< std::mutex > lock(mutex_);
+    paused_ = false;
+  }
+  condition_.notify_all();
+}
+
 void ThreadPool::stop(bool cancel_pending)
 {
   checkNotWorkerThread();
