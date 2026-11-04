@@ -44,7 +44,13 @@ public:
     return result;
   }
   void stop(bool cancel_pending = false);
+  void growTo(size_t count);
+  void shrinkTo(size_t count);
+  void resize(size_t count);
+  size_t size() const;
+
   ~ThreadPool() noexcept;
+
 private:
   void execute(size_t id);
   void checkNotWorkerThread() const;
